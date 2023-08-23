@@ -2,7 +2,6 @@ const PI = Math.PI;
 const PI2 = PI * 2;
 
 function dot(x, y, size, ctx, color) {
-  ctx.beginPath();
   if (color) {
     ctx.fillStyle = color;
   }

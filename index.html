@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html>
-
+<!-- This softare is licensed under the GNU GLP v3 (https://www.gnu.org/licenses/gpl-3.0.txt) -->
 <head>
   <script type="module" src="./script/main.mjs"></script>
+  <script src="./script/imports/jscolor.min.js"></script>
   <link rel="stylesheet" href="./css/style.css" />
 </head>
 
 <body>
   <div id="toolbar"></div>
+  <div id="stylebar">
+    <div class="color-picker" id="line-color-picker">
+      <input value="#ff000080" data-jscolor="{width: 100, closeButton: true, closeText: 'OK'}">
+    </div>
+    <div class="color-picker" id="fill-color-picker">
+      <input value="#00000080" data-jscolor="{width:100, closeText: 'OK'}">
+    </div>
+  </div>
   <div id="container">
     <canvas id="canvas"></canvas>
   </div>
