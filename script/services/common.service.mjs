@@ -1,4 +1,11 @@
+/**
+ * A module of common constraints and view values
+ * @module services/common
+ */
 let CommonService = {
+  /**
+   * Constants and constraints for the view
+   */
   constants: {
     // viewport constraints
     minZoom: 0.5,
@@ -61,21 +68,33 @@ let CommonService = {
     this.setY(this.viewY + val);
   },
 
-  convertToGridCoords: function(x, y) {
+  /**
+   * Converts the given mouse coordinates into canvas coordinates
+   * @param {number} x 
+   * @param {number} y 
+   * @returns the canvas coordinates as {x, y}
+   */
+  convertToGridCoords: function (x, y) {
     return {
       x: x / this.zoom + this.viewX - this.canvasOffsetX,
       y: y / this.zoom + this.viewY - this.canvasOffsetY
     }
   },
 
-  getClosestDot: function(x, y) {
+  /**
+   * Gets the closes 'dot' coordinate on the grid, for snapping. Inputs are canvas coordinates
+   * @param {number} x 
+   * @param {number} y 
+   * @returns the canvas coordinates as {x, y}
+   */
+  getClosestDot: function (x, y) {
     // assume x and y are in grid coords
     let closestOptions = []; // we can easily find five closest options
     let yMod = y % this.constants.gridSize;
     let yPos = y - yMod;
     let xMod = x % (this.constants.gridX * 2);
     let xPos = x - xMod;
-  
+
     closestOptions.push(
       { x: xPos, y: yPos },
       { x: xPos + this.constants.gridX * 2, y: yPos },
@@ -83,7 +102,7 @@ let CommonService = {
       { x: xPos, y: yPos + this.constants.gridSize },
       { x: xPos + this.constants.gridX, y: yPos + this.constants.gridSize / 2 }
     );
-  
+
     // locate the closest point
     let closestDistance = Math.hypot(x - closestOptions[0].x, y - closestOptions[0].y);
     let index = 0;

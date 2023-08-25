@@ -8,7 +8,10 @@
 </head>
 
 <body>
-  <div id="toolbar"></div>
+  <div id="toolbar">
+    <!-- This is dynamically populated by the Toolbar module -->
+  </div>
+
   <div id="stylebar">
     <div class="color-picker" id="line-color-picker">
       <input value="#ff000080" data-jscolor="{width: 100, closeButton: true, closeText: 'OK'}">
@@ -17,6 +20,7 @@
       <input value="#00000080" data-jscolor="{width:100, closeText: 'OK'}">
     </div>
   </div>
+  
   <div id="container">
     <canvas id="canvas"></canvas>
   </div>

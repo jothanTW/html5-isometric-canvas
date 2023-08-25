@@ -1,6 +1,7 @@
 import { PathSketch, setInternalPath } from '../sketch.mjs';
 import { CommonService } from '../services/common.service.mjs';
 import { StylebarControl } from '../controls/stylebar.control.mjs';
+import { CursorControl } from '../controls/cursor.control.mjs';
 
 let DotAlignDrawTool = {
   icon: './img/grid-lock-icon.png',
@@ -30,8 +31,21 @@ let DotAlignDrawTool = {
       if (!DotAlignDrawTool.preview) {
         return false;
       }
+      setInternalPath(DotAlignDrawTool.preview);
       DotAlignDrawTool.exportSketchCallback(DotAlignDrawTool.preview);
       DotAlignDrawTool.preview = null;
+      CursorControl.changeCursor();
+      return true;
+    },
+    undo: function() {
+      if (!DotAlignDrawTool.preview) {
+        return false;
+      }
+      if (DotAlignDrawTool.preview.nodes.length === 1) {
+        this.preview = null;
+        return true;
+      }
+      DotAlignDrawTool.preview.nodes.pop();
       return true;
     },
     contextmenu: function (evt) {
@@ -58,6 +72,7 @@ let DotAlignDrawTool = {
       return true;
     },
     mousemove: function (evt) {
+      CursorControl.changeCursor('grid');
       let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
       coords = CommonService.getClosestDot(coords.x, coords.y);
       DotAlignDrawTool.lastX = coords.x;

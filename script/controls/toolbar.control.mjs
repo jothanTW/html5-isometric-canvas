@@ -33,11 +33,19 @@ function changeToolStyle(newActiveToolName) {
   }
 }
 
+/**
+ * The toolbar control. Adds, registers, and changes active tools.
+ * @module controls/toolbar
+ */
 let ToolbarControl = {
   drawCallback: null,
   exportSketchFunction: function(sketch) {
     ObjectService.addObject(sketch);
   },
+  /**
+   * Adds a new tool to the toolbar. Checks the typing first, then adds its icon to the toolbar in the DOM
+   * @param {Tool} tool - A valid tool module
+   */
   addTool: function(tool) {
     // duck type the tool
     if (!tool.name || typeof tool.name !== 'string') {
@@ -72,6 +80,23 @@ let ToolbarControl = {
     availableTools.push(tool);
     addToolbarElement(tool.name, tool.icon);
   },
+  /**
+   * Dynamically adds an external module containing a valid Tool
+   * @param {string} url - the URL to the ESModule file
+   */
+  addExternalToolModule: function(url) {
+    import(url).then(exports => {
+      for (let k of Object.keys(exports)) {
+        this.addTool(exports[k]);
+      }
+    }).catch(e => {
+      console.error(e);
+    })
+  },
+  /**
+   * Changes the active tool
+   * @param {string} toolName - The identifier of the new tool
+   */
   selectTool(toolName) {
     if (activeTool && activeTool.name !== toolName && activeTool.events.escape) {
       if (activeTool.events.escape()) {
@@ -87,6 +112,10 @@ let ToolbarControl = {
     }
     console.error('Tool with name "' + toolName + '" not registered');
   },
+  /**
+   * Draws the current tool's preview to the canvas
+   * @param {CanvasRenderingContext2D} context 
+   */
   drawPreview: function(context) {
     if (activeTool) {
       if (activeTool.drawPreview) {
@@ -96,7 +125,13 @@ let ToolbarControl = {
       }
     }
   },
-  initCanvasListeners: function(canvas) {
+  /**
+   * Registers the DOM listeners to pass to toolbars, and the redraw callback
+   * @param {HTMLCanvasElement} canvas 
+   * @param {function(): void} drawCallback 
+   */
+  initCanvasListeners: function(canvas, drawCallback) {
+    this.drawCallback = drawCallback;
     for (let ev of eventList) {
       canvas.addEventListener(ev, evt => {
         evt.stopPropagation();
@@ -109,10 +144,33 @@ let ToolbarControl = {
       });
     }
   },
+  /**
+   * Cancels the current tool action
+   */
   cancelCurrentTool() {
     if (activeTool && activeTool.events.escape) {
       activeTool.events.escape();
     }
+  },
+  /**
+   * Sends an 'undo' command to the current tool
+   * @returns {boolean} Whether or not the undo command is valid for the current tool
+   */
+  undoCurrentTool() {
+    if (activeTool && activeTool.events.undo) {
+      return activeTool.events.undo();
+    }
+    return false;
+  },
+  /**
+   * Sends a 'redo' command to the current tool
+   * @returns {boolean} Whether or not the redo command is valid for the current tool
+   */
+  redoCurrentTool() {
+    if (activeTool && activeTool.events.redo) {
+      return activeTool.events.redo();
+    }
+    return false;
   }
 }
 

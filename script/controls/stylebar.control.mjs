@@ -19,9 +19,16 @@ let validColorRegex = /^#(?:[0-9a-fA-F]{3,4}){1,2}$/
 
 let lineSize = 3; // this will later be selectable from a drop down or slider
 
+/**
+ * The stylebar control. Maintains the color/fill/line size options
+ * @module controls/stylebar
+ */
 let StylebarControl = {
   lastValidLineValue: '#000000ff',
   lastValidFillValue: '#000000ff',
+  /**
+   * @returns {string} A hex code color string
+   */
   getLineColor: function () {
     if (!lineColorEle.value.trim().match(validColorRegex)) {
       return this.lastValidLineValue;
@@ -29,6 +36,9 @@ let StylebarControl = {
     this.lastValidLineValue = lineColorEle.value.trim();
     return lineColorEle.value.trim();
   },
+  /**
+   * @returns {string} A hex code color string
+   */
   getFillColor: function () {
     if (!fillColorEle.value.trim().match(validColorRegex)) {
       return this.lastValidFillValue;
@@ -36,6 +46,9 @@ let StylebarControl = {
     this.lastValidFillValue = fillColorEle.value.trim();
     return fillColorEle.value.trim();
   },
+  /**
+   * @returns {number} A line weight
+   */
   getLineSize: function() {
     return lineSize;
   }

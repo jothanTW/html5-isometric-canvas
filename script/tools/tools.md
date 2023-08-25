@@ -22,4 +22,8 @@ The callback function called when a finalized sketch is exported. This will rema
 ## drawPreview
 A function to draw the in-progress drawable item contained in 'preview'. If null, the Toolbar module will attempt to draw the preview sketch with no other parameters.
 ## events
-A dictionary of DOM event handlers. Entries where 'eventname' matches a valid event name (click, mousedown, etc) listed in the Toolbar module will be passed those events from the canvas when this tool is active. It may also contain certain override events called by the Toolbar or Main modules, e.g. 'escape'
+A dictionary of event handlers. Tool event handlers follow two formats: raw event handlers (usually for mouse or touchpad events) or override events (for undo, redo, escape, etc).
+
+Raw handlers are passed directly from the DOM through the Toolbar module, which has a list of valid events for handling by tools. They expect an appropriate DOM event as an argument, and return a boolean on if an action was performed which causes the canvas to be redrawn.
+
+Override handlers are called programmatically by other modules. They usually don't take an argument, and return a boolean for whether or not the action was 'valid' in this context- if not, the event is expected to be handled by another module.
