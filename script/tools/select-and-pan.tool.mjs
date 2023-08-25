@@ -2,6 +2,7 @@ import { CommonService } from '../services/common.service.mjs';
 import { ObjectService } from '../services/object.service.mjs';
 
 import { CursorControl } from '../controls/cursor.control.mjs';
+import { StylebarControl } from '../controls/stylebar.control.mjs';
 
 let dashpattern = [10, 10];
 let dashcolor = '#888';
@@ -38,6 +39,14 @@ let SelectAndPanTool = {
       SelectAndPanTool.isRightMouseDown = false;
       CursorControl.changeCursor();
     },
+    delete: function() {
+      if (SelectAndPanTool.isMouseDown || SelectAndPanTool.isRightMouseDown || SelectAndPanTool.movingIndex === -1) {
+        return false;
+      }
+      ObjectService.removeObject(SelectAndPanTool.movingIndex);
+      SelectAndPanTool.movingIndex = -1;
+      return true;
+    },
     mousedown: function (evt) {
       if (evt.which === 3 || evt.button === 2) {
         SelectAndPanTool.isRightMouseDown = true;
@@ -60,11 +69,11 @@ let SelectAndPanTool = {
       if (evt.which === 3 || evt.button === 2) {
         SelectAndPanTool.isRightMouseDown = false;
         CursorControl.changeCursor();
+      } else {
+        SelectAndPanTool.isMouseDown = false;
         if (SelectAndPanTool.movingIndex !== -1) {
           ObjectService.finalizeMove(SelectAndPanTool.movingIndex);
         }
-      } else {
-        SelectAndPanTool.isMouseDown = false;
       }
       let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
       // get the target from the canvas clicked on in case more are added in the future
@@ -96,5 +105,19 @@ let SelectAndPanTool = {
     }
   }
 }
+
+StylebarControl.fillColorChanged.addListener(color => {
+  if (SelectAndPanTool.movingIndex !== -1) {
+    ObjectService.colorObject(SelectAndPanTool.movingIndex, color, true);
+    CommonService.triggerDrawFunction();
+  }
+});
+
+StylebarControl.lineColorChanged.addListener(color => {
+  if (SelectAndPanTool.movingIndex !== -1) {
+    ObjectService.colorObject(SelectAndPanTool.movingIndex, color);
+    CommonService.triggerDrawFunction();
+  }
+});
 
 export { SelectAndPanTool }

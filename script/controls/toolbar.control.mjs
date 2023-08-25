@@ -1,8 +1,11 @@
 import { DotAlignDrawTool } from '../tools/dot-align.tool.mjs';
 import { SelectAndPanTool } from '../tools/select-and-pan.tool.mjs';
 import { FreePaintTool } from '../tools/free-paint.tool.mjs';
+
 import { drawSketch } from '../sketch.mjs';
+
 import { ObjectService } from '../services/object.service.mjs';
+import { CommonService } from '../services/common.service.mjs';
 
 let availableTools = [];
 let activeTool = null;
@@ -38,7 +41,6 @@ function changeToolStyle(newActiveToolName) {
  * @module controls/toolbar
  */
 let ToolbarControl = {
-  drawCallback: null,
   exportSketchFunction: function(sketch) {
     ObjectService.addObject(sketch);
   },
@@ -100,7 +102,7 @@ let ToolbarControl = {
   selectTool(toolName) {
     if (activeTool && activeTool.name !== toolName && activeTool.events.escape) {
       if (activeTool.events.escape()) {
-        this.drawCallback();
+        CommonService.triggerDrawFunction();
       }
     }
     for (let t of availableTools) {
@@ -128,17 +130,15 @@ let ToolbarControl = {
   /**
    * Registers the DOM listeners to pass to toolbars, and the redraw callback
    * @param {HTMLCanvasElement} canvas 
-   * @param {function(): void} drawCallback 
    */
-  initCanvasListeners: function(canvas, drawCallback) {
-    this.drawCallback = drawCallback;
+  initCanvasListeners: function(canvas) {
     for (let ev of eventList) {
       canvas.addEventListener(ev, evt => {
         evt.stopPropagation();
         evt.preventDefault();
         if (activeTool.events[ev]) {
           if (activeTool.events[ev](evt)) {
-            ToolbarControl.drawCallback();
+            CommonService.triggerDrawFunction();
           }
         }
       });
@@ -169,6 +169,16 @@ let ToolbarControl = {
   redoCurrentTool() {
     if (activeTool && activeTool.events.redo) {
       return activeTool.events.redo();
+    }
+    return false;
+  },
+  /**
+   * Sends a 'delete' command to the current tool
+   * @returns {boolean} Whether or not the delete command is valid for the current tool
+   */
+  deleteFromCurrentTool() {
+    if (activeTool && activeTool.events.delete) {
+      return activeTool.events.delete();
     }
     return false;
   }

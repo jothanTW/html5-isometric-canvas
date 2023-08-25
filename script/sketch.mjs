@@ -8,6 +8,8 @@ class Sketch {
     this.offsetX = 0;
     this.offsetY = 0;
     this.boundingRect = null;
+    this.color = '';
+    this.fill = '';
   }
 }
 
@@ -15,7 +17,6 @@ class PathSketch extends Sketch {
   constructor() {
     super('path');
     this.nodes = [];
-    this.color = '';
     this.size = 2;
     this.isClosed = false;
   }

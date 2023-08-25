@@ -65,8 +65,10 @@ function resize() {
   context.scale(CommonService.zoom, CommonService.zoom);
 }
 
-ToolbarControl.initCanvasListeners(canvas, () => {draw()});
-KeyboardControl.initKeyboardEvents(() => draw());
+ToolbarControl.initCanvasListeners(canvas);
+KeyboardControl.initKeyboardEvents();
+
+CommonService.setDrawFunction(() => draw());
 
 resize();
 draw();

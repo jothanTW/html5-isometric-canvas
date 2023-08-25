@@ -1,5 +1,7 @@
 import { ToolbarControl } from './toolbar.control.mjs';
+
 import { EventService } from '../services/object.service.mjs';
+import { CommonService } from '../services/common.service.mjs';
 
 /**
  * The keyboard control. Intercepts keyboard commands and sends them to the proper controls or services.
@@ -8,21 +10,20 @@ import { EventService } from '../services/object.service.mjs';
 let KeyboardControl = {
   /**
    * Initialize the keyboard listeners and register the callback to redraw the canvas
-   * @param {function():void} drawCallback - The function to trigget a redraw
    */
-  initKeyboardEvents: function(drawCallback) {
+  initKeyboardEvents: function() {
     window.addEventListener('keyup', ev => {
       if (ev.ctrlKey) {
         if(handleCtrlKeyPress(ev)) {
-          drawCallback();
+          CommonService.triggerDrawFunction();
         }
       } else if (ev.altKey) {
         if (handleAltKeyPress(ev)) {
-          drawCallback();
+          CommonService.triggerDrawFunction();
         }
       } else {
         if (handleKeyPress(ev)) {
-          drawCallback();
+          CommonService.triggerDrawFunction();
         }
       }
     });
@@ -33,6 +34,9 @@ function handleKeyPress(ev) {
   switch (ev.key) {
     case 'Escape':
       ToolbarControl.cancelCurrentTool();
+      break;
+    case 'Delete':
+      ToolbarControl.deleteFromCurrentTool();
       break;
     default:
       return false;

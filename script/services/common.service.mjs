@@ -1,3 +1,5 @@
+let drawFunction = null;
+
 /**
  * A module of common constraints and view values
  * @module services/common
@@ -114,6 +116,25 @@ let CommonService = {
       }
     }
     return closestOptions[index];
+  },
+  /**
+   * Sets the redraw trigger
+   * @param {function(): void} callback 
+   */
+  setDrawFunction: function(callback) {
+    if (typeof callback !== 'function') {
+      console.error('Attempted to add an invalid draw function!');
+      return;
+    }
+    drawFunction = callback;
+  },
+  /**
+   * Calls the redraw trigger
+   */
+  triggerDrawFunction: function() {
+    if (drawFunction) {
+      drawFunction();
+    }
   }
 }
 

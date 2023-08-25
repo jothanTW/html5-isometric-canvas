@@ -86,7 +86,10 @@ let ObjectService = {
       console.error('Attempted to finalize a move for an object that was not moving!');
       return;
     }
-    EventService.addEvent(new MoveEvent(index, obj.offsetX - obj.ox, obj.offsetY - obj.oy));
+    // double check we're not adding an empty move action
+    if (obj.offsetX !== obj.ox || obj.offsetY !== obj.oy) {
+      EventService.addEvent(new MoveEvent(index, obj.offsetX - obj.ox, obj.offsetY - obj.oy));
+    }
     delete obj.ox;
     delete obj.oy;
   },
@@ -108,6 +111,28 @@ let ObjectService = {
     obj.offsetY = obj.oy;
     delete obj.ox;
     delete obj.oy;
+  },
+  /**
+   * Recolors an object
+   * @param {number} index - The stack index of the sketch
+   * @param {string} color 
+   * @param {boolean} isFill 
+   * @returns 
+   */
+  colorObject: function(index, color, isFill = false) {
+    if (index < 0 || index >= this.objects.length) {
+      console.error('Attempted to color a nonexistent object at index "' + index + '"');
+      return;
+    }
+    let oldColor = '';
+    if (isFill) {
+      oldColor = this.objects[index].fill;
+      this.objects[index].fill = color;
+    } else {
+      oldColor = this.objects[index].color;
+      this.objects[index].color = color;
+    }
+    EventService.addEvent(new ColorEvent(index, isFill, oldColor, color));
   },
   /**
    * Draws all objects in the stack in order
