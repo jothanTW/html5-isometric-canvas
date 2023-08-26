@@ -135,6 +135,15 @@ let ObjectService = {
     }
     EventService.addEvent(new ColorEvent(index, isFill, oldColor, color));
   },
+  changeObjectWeight: function(index, weight) {
+    if (index < 0 || index >= this.objects.length) {
+      console.error('Attempted to color a nonexistent object at index "' + index + '"');
+      return;
+    }
+    let oldWeight = this.objects[index].size;
+    this.objects[index].size = weight;
+    EventService.addEvent(new WeightEvent(index, oldWeight, weight));
+  },
   /**
    * Draws all objects in the stack in order
    * @param {CanvasRenderingContext2D} context - The canvas drawing context
@@ -179,6 +188,11 @@ let ObjectService = {
  * Move Sketch - 'move'
  *   stores the sketch object's index in the ObjectService
  *   stores the delta coordinates
+ * 
+ * Resize Sketch Line - 'weight'
+ *   stores the sketch object's index in the ObjectService
+ *   stores the old line weight
+ *   stores the new line weight
  * 
  * Relayer Sketch - 'layer'
  *   stores the sketch object's former index in the ObjectService
@@ -231,8 +245,16 @@ class ColorEvent extends Event {
   constructor(index, isFill, color, newColor) {
     super('color', index);
     this.isFill = isFill,
-      this.color = color;
+    this.color = color;
     this.newColor = newColor;
+  }
+}
+
+class WeightEvent extends Event {
+  constructor(index, oldWeight, newWeight) {
+    super('weight', index);
+    this.oldWeight = oldWeight;
+    this.newWeight = newWeight;
   }
 }
 
@@ -259,6 +281,9 @@ function unprocessEvent(event) {
         ObjectService.objects[event.index].color = event.color;
       }
       break;
+    case 'weight':
+      ObjectService.objects[event.index].size = event.oldWeight;
+      break;
   }
 }
 
@@ -284,6 +309,9 @@ function reprocessEvent(event) {
       } else {
         ObjectService.objects[event.index].color = event.newColor;
       }
+      break;
+    case 'weight':
+      ObjectService.objects[event.index].size = event.weight;
       break;
   }
 }

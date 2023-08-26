@@ -41,6 +41,7 @@ html, body {
     min-height: 100px;
     width: 200px;
     z-index: 10;
+    padding: 10px;
 }
 
 .color-picker {
@@ -49,6 +50,14 @@ html, body {
 
 .color-picker > input {
     max-width: calc(100% - 40px);
+}
+
+.line-slider {
+    width: 100%;
+}
+
+.line-slider > input {
+    width: 100%;
 }
 
 #container {

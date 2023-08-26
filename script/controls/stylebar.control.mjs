@@ -2,6 +2,7 @@ import { EventLoudener } from '../loudener.mjs';
 
 let lineColorEle = document.getElementById('line-color-picker').getElementsByTagName('input')[0];
 let fillColorEle = document.getElementById('fill-color-picker').getElementsByTagName('input')[0];
+let lineweightEle = document.getElementById('line-weight-slider').getElementsByTagName('input')[0];
 
 let colorPickerOptions = {
   width: 100,
@@ -25,9 +26,11 @@ fillColorEle.addEventListener('change', event => {
   StylebarControl.fillColorChanged.emit(event.target.value);
 });
 
-let validColorRegex = /^#(?:[0-9a-fA-F]{3,4}){1,2}$/
+lineweightEle.addEventListener('input', event => {
+  StylebarControl.lineWeightChanged.emit(event.target.value);
+});
 
-let lineSize = 3; // this will later be selectable from a drop down or slider
+let validColorRegex = /^#(?:[0-9a-fA-F]{3,4}){1,2}$/
 
 /**
  * The stylebar control. Maintains the color/fill/line size options
@@ -63,7 +66,7 @@ let StylebarControl = {
    * @returns {number} A line weight
    */
   getLineSize: function() {
-    return lineSize;
+    return lineweightEle.value;
   }
 }
 

@@ -121,4 +121,11 @@ StylebarControl.lineColorChanged.addListener(color => {
   }
 });
 
+StylebarControl.lineWeightChanged.addListener(weight => {
+  if (SelectAndPanTool.movingIndex !== -1) {
+    ObjectService.changeObjectWeight(SelectAndPanTool.movingIndex, weight);
+    CommonService.triggerDrawFunction();
+  }
+});
+
 export { SelectAndPanTool }
