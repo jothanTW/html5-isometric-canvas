@@ -120,7 +120,7 @@ let ObjectService = {
    * @param {boolean} isFill 
    * @returns 
    */
-  colorObject: function(index, color, isFill = false) {
+  colorObject: function (index, color, isFill = false) {
     if (index < 0 || index >= this.objects.length) {
       console.error('Attempted to color a nonexistent object at index "' + index + '"');
       return;
@@ -135,7 +135,7 @@ let ObjectService = {
     }
     EventService.addEvent(new ColorEvent(index, isFill, oldColor, color));
   },
-  changeObjectWeight: function(index, weight) {
+  changeObjectWeight: function (index, weight) {
     if (index < 0 || index >= this.objects.length) {
       console.error('Attempted to color a nonexistent object at index "' + index + '"');
       return;
@@ -245,7 +245,7 @@ class ColorEvent extends Event {
   constructor(index, isFill, color, newColor) {
     super('color', index);
     this.isFill = isFill,
-    this.color = color;
+      this.color = color;
     this.newColor = newColor;
   }
 }
@@ -311,7 +311,7 @@ function reprocessEvent(event) {
       }
       break;
     case 'weight':
-      ObjectService.objects[event.index].size = event.weight;
+      ObjectService.objects[event.index].size = event.newWeight;
       break;
   }
 }
@@ -329,8 +329,15 @@ let EventService = {
    * @param {Event} event 
    */
   addEvent: function (event) {
-    this.eventStack.push(event);
     this.undoStack = [];
+    if (this.eventStack.length && this.eventStack[this.eventStack.length - 1].type == event.type) {
+      // check for collapsable types
+      if (event.type === 'weight') {
+        let oldEvent = this.eventStack.pop();
+        event.oldWeight = oldEvent.oldWeight;
+      }
+    }
+    this.eventStack.push(event);
   },
   /**
    * Undo the last object manipulation
