@@ -39,10 +39,8 @@ function drawPathSketch(context, sketch) {
   context.fillStyle = sketch.fill;
   if (sketch.path) {
     context.translate(sketch.offsetX, sketch.offsetY);
+    context.fill(sketch.path);
     context.stroke(sketch.path);
-    if (sketch.isClosed) {
-      context.fill(sketch.path);
-    }
     context.translate(-sketch.offsetX, -sketch.offsetY);
     return;
   }
@@ -61,10 +59,8 @@ function drawPathSketch(context, sketch) {
   if (sketch.isClosed) {
     context.closePath();
   }
+  context.fill();
   context.stroke();
-  if (sketch.isClosed) {
-    context.fill();
-  }
 }
 
 

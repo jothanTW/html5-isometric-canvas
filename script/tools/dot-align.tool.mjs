@@ -16,14 +16,17 @@ let DotAlignDrawTool = {
     }
     this.preview.color = StylebarControl.getLineColor();
     this.preview.size = StylebarControl.getLineSize();
+    this.preview.fill = StylebarControl.getFillColor();
     context.beginPath();
     context.lineWidth = this.preview.size;
     context.strokeStyle = this.preview.color;
+    context.fillStyle = this.preview.fill;
     context.moveTo(this.preview.nodes[0].x, this.preview.nodes[0].y);
     for (let i = 1; i < this.preview.nodes.length; i++) {
       context.lineTo(this.preview.nodes[i].x, this.preview.nodes[i].y);
     }
     context.lineTo(this.lastX, this.lastY);
+    context.fill();
     context.stroke();
   },
   events: {

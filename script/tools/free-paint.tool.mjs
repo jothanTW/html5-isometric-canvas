@@ -15,6 +15,7 @@ let FreePaintTool = {
       FreePaintTool.preview = new PathSketch();
       FreePaintTool.preview.color = StylebarControl.getLineColor();
       FreePaintTool.preview.size = StylebarControl.getLineSize();
+      FreePaintTool.preview.fill = StylebarControl.getFillColor();
       FreePaintTool.preview.nodes.push(CommonService.convertToGridCoords(evt.clientX, evt.clientY));
       return true;
     },
