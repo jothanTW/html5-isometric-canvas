@@ -1,4 +1,5 @@
 import { drawSketch } from '../sketch.mjs';
+import { CommonService } from './common.service.mjs';
 
 /**
  * The object service. Keeps and maintains a stack of drawable objects.
@@ -152,6 +153,7 @@ let ObjectService = {
    * @returns The stack index of the sketch, or -1 if not found
    */
   selectObjectIndex: function (x, y, context) {
+    context.setTransform(1, 0, 0, 1, 0, 0);
     for (let i = this.objects.length - 1; i >= 0; i--) {
       if (this.objects[i].path &&
         context.isPointInPath(this.objects[i].path, x - this.objects[i].offsetX, y - this.objects[i].offsetY)) {

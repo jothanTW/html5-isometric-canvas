@@ -12,8 +12,7 @@ let CommonService = {
     // viewport constraints
     minZoom: 0.5,
     maxZoom: 3,
-    minDim: -1000,
-    maxDim: 1000,
+    maxDim: 10000,
     zoomPercent: 0.001,
 
     // grid constraints
@@ -44,8 +43,8 @@ let CommonService = {
 
   setX: function (val) {
     this.viewX = val;
-    if (this.viewX < this.constants.minDim) {
-      this.viewX = this.constants.minDim;
+    if (this.viewX < -this.constants.maxDim) {
+      this.viewX = -this.constants.maxDim;
     }
     if (this.viewX > this.constants.maxDim) {
       this.viewX = this.constants.maxDim;
@@ -58,8 +57,8 @@ let CommonService = {
 
   setY: function (val) {
     this.viewY = val;
-    if (this.viewY < this.constants.minDim) {
-      this.viewY = this.constants.minDim;
+    if (this.viewY < -this.constants.maxDim) {
+      this.viewY = -this.constants.maxDim;
     }
     if (this.viewY > this.constants.maxDim) {
       this.viewY = this.constants.maxDim;

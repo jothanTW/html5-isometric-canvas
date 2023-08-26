@@ -84,13 +84,14 @@ let SelectAndPanTool = {
       return true;
     },
     mousemove: function (evt) {
+      let movementX = evt.movementX / CommonService.zoom;
+      let movementY = evt.movementY / CommonService.zoom;
       if (SelectAndPanTool.isRightMouseDown) {
-        CommonService.modX(-evt.movementX);
-        CommonService.modY(-evt.movementY);
+        CommonService.modX(-movementX);
+        CommonService.modY(-movementY);
         return true;
       } else if (SelectAndPanTool.isMouseDown && SelectAndPanTool.movingIndex !== -1) {
-        //ObjectService.moveObject(SelectAndPanTool.movingIndex, evt.movementX, evt.movementY);
-        ObjectService.incrementMove(SelectAndPanTool.movingIndex, evt.movementX, evt.movementY);
+        ObjectService.incrementMove(SelectAndPanTool.movingIndex, movementX, movementY);
         return true;
       }
       let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
