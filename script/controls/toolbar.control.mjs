@@ -1,6 +1,7 @@
 import { DotAlignDrawTool } from '../tools/dot-align.tool.mjs';
 import { SelectAndPanTool } from '../tools/select-and-pan.tool.mjs';
 import { FreePaintTool } from '../tools/free-paint.tool.mjs';
+import { StraightLineTool } from '../tools/straight-line.tool.mjs';
 
 import { drawSketch } from '../sketch.mjs';
 
@@ -185,6 +186,7 @@ let ToolbarControl = {
 }
 
 ToolbarControl.addTool(SelectAndPanTool);
+ToolbarControl.addTool(StraightLineTool);
 ToolbarControl.addTool(DotAlignDrawTool);
 ToolbarControl.addTool(FreePaintTool);
 
