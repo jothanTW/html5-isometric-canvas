@@ -14,6 +14,8 @@ let CommonService = {
     maxZoom: 3,
     maxDim: 10000,
     zoomPercent: 0.001,
+    pinchPercent: 0.01,
+    trackpadScale: 2,
 
     // grid constraints
     gridSize: 50,
@@ -37,8 +39,14 @@ let CommonService = {
     }
   },
 
-  modZoom: function (val) {
+  modZoom: function (val, zoomCoords = null) {
+    let oldScale = this.zoom;
     this.setZoom(this.zoom + val);
+    if (zoomCoords) {
+      let scale = this.zoom - oldScale;
+      this.modX(zoomCoords.x * scale / this.zoom);
+      this.modY(zoomCoords.y * scale / this.zoom);
+    }
   },
 
   setX: function (val) {

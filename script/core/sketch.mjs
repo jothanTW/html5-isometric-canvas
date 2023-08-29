@@ -1,4 +1,4 @@
-import { CommonService } from './services/common.service.mjs';
+import { CommonService } from '../services/common.service.mjs';
 import { dot } from './shapes.mjs';
 
 class Sketch {

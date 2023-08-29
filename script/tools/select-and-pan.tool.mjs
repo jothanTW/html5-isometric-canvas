@@ -34,12 +34,12 @@ let SelectAndPanTool = {
     }
   },
   events: {
-    escape: function() {
+    escape: function () {
       SelectAndPanTool.isMouseDown = false;
       SelectAndPanTool.isRightMouseDown = false;
       CursorControl.changeCursor();
     },
-    delete: function() {
+    delete: function () {
       if (SelectAndPanTool.isMouseDown || SelectAndPanTool.isRightMouseDown || SelectAndPanTool.movingIndex === -1) {
         return false;
       }
@@ -103,6 +103,18 @@ let SelectAndPanTool = {
         CursorControl.changeCursor();
       }
       return false;
+    },
+    touchdown: function (evt) {
+      SelectAndPanTool.isMouseDown = true;
+      let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
+      // get the target from the canvas clicked on in case more are added in the future
+      let context = evt.target.getContext('2d');
+      //console.log(evt);
+      SelectAndPanTool.movingIndex = ObjectService.selectObjectIndex(coords.x, coords.y, context);
+      if (SelectAndPanTool.movingIndex !== -1) {
+        CursorControl.changeCursor('grabbing');
+        ObjectService.startMove(SelectAndPanTool.movingIndex);
+      }
     }
   }
 }

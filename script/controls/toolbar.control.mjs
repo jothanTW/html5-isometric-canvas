@@ -3,10 +3,11 @@ import { SelectAndPanTool } from '../tools/select-and-pan.tool.mjs';
 import { FreePaintTool } from '../tools/free-paint.tool.mjs';
 import { StraightLineTool } from '../tools/straight-line.tool.mjs';
 
-import { drawSketch } from '../sketch.mjs';
+import { drawSketch } from '../core/sketch.mjs';
 
 import { ObjectService } from '../services/object.service.mjs';
 import { CommonService } from '../services/common.service.mjs';
+import { TouchControl } from './touch.control.mjs';
 
 let availableTools = [];
 let activeTool = null;
@@ -144,6 +145,57 @@ let ToolbarControl = {
         }
       });
     }
+    TouchControl.tap.addListener(arg => {
+      if (activeTool.events.tap) {
+        if (activeTool.events.tap(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      } else if (activeTool.events.click) {
+        if (activeTool.events.click(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      }
+    });
+    TouchControl.down.addListener(arg => {
+      if (activeTool.events.tapdown) {
+        if (activeTool.events.tapdown(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      } else if (activeTool.events.mousedown) {
+        if (activeTool.events.mousedown(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      }
+    });
+    TouchControl.up.addListener(arg => {
+      if (activeTool.events.tapup) {
+        if (activeTool.events.tapup(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      } else if (activeTool.events.mouseup) {
+        if (activeTool.events.mouseup(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      }
+    });
+    TouchControl.move.addListener(arg => {
+      if (activeTool.events.tapmove) {
+        if (activeTool.events.tapmove(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      } else if (activeTool.events.mousemove) {
+        if (activeTool.events.mousemove(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      }
+    });
+    TouchControl.pan.addListener(arg => {
+      if (activeTool.events.pan) {
+        if (activeTool.events.pan(arg)) {
+          CommonService.triggerDrawFunction();
+        }
+      }
+    });
   },
   /**
    * Cancels the current tool action

@@ -1,4 +1,4 @@
-import { PathSketch, setInternalPath } from '../sketch.mjs';
+import { PathSketch, setInternalPath } from '../core/sketch.mjs';
 import { CommonService } from '../services/common.service.mjs';
 import { StylebarControl } from '../controls/stylebar.control.mjs';
 import { CursorControl } from '../controls/cursor.control.mjs';
@@ -10,6 +10,7 @@ let DotAlignDrawTool = {
   exportSketchCallback: null,
   lastX: 0,
   lastY: 0,
+  shouldPreviewNext: false,
   drawPreview: function (context) {
     if (!this.preview) {
       return;
@@ -25,7 +26,9 @@ let DotAlignDrawTool = {
     for (let i = 1; i < this.preview.nodes.length; i++) {
       context.lineTo(this.preview.nodes[i].x, this.preview.nodes[i].y);
     }
-    context.lineTo(this.lastX, this.lastY);
+    if (this.shouldPreviewNext) {
+      context.lineTo(this.lastX, this.lastY);
+    }
     context.fill();
     context.stroke();
   },
@@ -51,6 +54,17 @@ let DotAlignDrawTool = {
       DotAlignDrawTool.preview.nodes.pop();
       return true;
     },
+    tap: function(evt) {
+      DotAlignDrawTool.shouldPreviewNext = false;
+      if (!DotAlignDrawTool.preview) {
+        DotAlignDrawTool.preview = new PathSketch();
+        DotAlignDrawTool.preview.color = StylebarControl.getLineColor();
+        DotAlignDrawTool.preview.size = StylebarControl.getLineSize();
+      }
+      let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
+      DotAlignDrawTool.preview.nodes.push(CommonService.getClosestDot(coords.x, coords.y));
+      return true;
+    },
     contextmenu: function (evt) {
       if (DotAlignDrawTool.preview) {
         if (DotAlignDrawTool.preview.nodes.length > 2) {
@@ -65,6 +79,7 @@ let DotAlignDrawTool = {
       return false;
     },
     click: function (evt) {
+      DotAlignDrawTool.shouldPreviewNext = true;
       if (!DotAlignDrawTool.preview) {
         DotAlignDrawTool.preview = new PathSketch();
         DotAlignDrawTool.preview.color = StylebarControl.getLineColor();

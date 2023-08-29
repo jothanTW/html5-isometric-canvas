@@ -1,8 +1,11 @@
-import { dot } from './shapes.mjs';
-import { CommonService } from './services/common.service.mjs';
+import { dot } from './core/shapes.mjs';
+
 import { ToolbarControl } from './controls/toolbar.control.mjs';
-import { ObjectService } from './services/object.service.mjs';
 import { KeyboardControl } from './controls/keyboard.control.mjs';
+import { TouchControl } from './controls/touch.control.mjs';
+
+import { CommonService } from './services/common.service.mjs';
+import { ObjectService } from './services/object.service.mjs';
 
 // canvas
 const container = document.getElementById('container');
@@ -67,6 +70,7 @@ function resize() {
 
 ToolbarControl.initCanvasListeners(canvas);
 KeyboardControl.initKeyboardEvents();
+TouchControl.initTouchEvents(canvas);
 
 CommonService.setDrawFunction(() => draw());
 
@@ -76,7 +80,15 @@ draw();
 
 canvas.addEventListener('wheel', ev => {
   ev.stopPropagation();
-  CommonService.modZoom(-ev.deltaY * CommonService.constants.zoomPercent);
+  ev.preventDefault();
+  console.log(ev);
+  let isTouchpad = false;
+  let deltaY = ev.deltaY;
+  if (ev.wheelDeltaY === ev.deltaY * -3 || ev.deltaMode === 0) {
+    deltaY *= 3 * CommonService.constants.trackpadScale;
+  }
+  CommonService.modZoom(-deltaY * CommonService.constants.zoomPercent, 
+    {x: ev.clientX / CommonService.zoom, y: ev.clientY / CommonService.zoom});
   resize();
   draw();
 });
@@ -92,3 +104,21 @@ canvas.addEventListener('resize', ev => {
   resize();
   draw();
 });
+
+
+
+TouchControl.zoom.addListener(evt => {
+  console.log(evt);
+  CommonService.modZoom(evt.zoom * CommonService.constants.pinchPercent, 
+    {x: evt.clientX / CommonService.zoom, y: evt.clientY / CommonService.zoom});
+  resize();
+  draw();
+});
+
+TouchControl.pan.addListener(evt => {
+  //console.log(evt)
+  
+  CommonService.modX(-evt.deltaX);
+  CommonService.modY(-evt.deltaY);
+  draw();
+})

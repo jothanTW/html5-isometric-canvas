@@ -1,4 +1,4 @@
-import { drawSketch } from '../sketch.mjs';
+import { drawSketch } from '../core/sketch.mjs';
 import { CommonService } from './common.service.mjs';
 
 /**

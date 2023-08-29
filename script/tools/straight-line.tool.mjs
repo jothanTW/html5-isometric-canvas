@@ -1,4 +1,4 @@
-import { PathSketch, setInternalPath } from '../sketch.mjs';
+import { PathSketch, setInternalPath } from '../core/sketch.mjs';
 import { CommonService } from '../services/common.service.mjs';
 import { StylebarControl } from '../controls/stylebar.control.mjs';
 import { CursorControl } from '../controls/cursor.control.mjs';

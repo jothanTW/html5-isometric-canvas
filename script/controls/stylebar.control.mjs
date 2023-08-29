@@ -1,4 +1,4 @@
-import { EventLoudener } from '../loudener.mjs';
+import { EventLoudener } from '../core/loudener.mjs';
 
 let lineColorEle = document.getElementById('line-color-picker').getElementsByTagName('input')[0];
 let fillColorEle = document.getElementById('fill-color-picker').getElementsByTagName('input')[0];
