@@ -1,13 +1,13 @@
-import { DotAlignDrawTool } from '../tools/dot-align.tool.mjs';
+import { PathTool } from '../tools/path-tool.mjs';
 import { SelectAndPanTool } from '../tools/select-and-pan.tool.mjs';
 import { FreePaintTool } from '../tools/free-paint.tool.mjs';
-import { StraightLineTool } from '../tools/straight-line.tool.mjs';
 
 import { drawSketch } from '../core/sketch.mjs';
 
 import { ObjectService } from '../services/object.service.mjs';
 import { CommonService } from '../services/common.service.mjs';
 import { TouchControl } from './touch.control.mjs';
+import { SubMenuControl } from './submenu.control.mjs';
 
 let availableTools = [];
 let activeTool = null;
@@ -24,6 +24,7 @@ function addToolbarElement(name, icon) {
   img.addEventListener('click', evt => {
     ToolbarControl.selectTool(name);
   });
+  img.title = name;
   img.id = 'tool-' + name;
   img.classList = 'toolbar-image';
   toolbarEle.appendChild(img)
@@ -110,7 +111,16 @@ let ToolbarControl = {
     for (let t of availableTools) {
       if (t.name === toolName) {
         activeTool = t;
-        changeToolStyle(t.name)
+        changeToolStyle(t.name);
+        if (t.subMenu) {
+          SubMenuControl.loadSubMenu(t.subMenu);
+          // locate the position of the tool
+          let toolEle = document.getElementById('tool-' + t.name);
+          console.log(toolEle);
+          SubMenuControl.placeSubMenu(toolEle.offsetLeft + toolEle.offsetWidth + 10, toolEle.offsetTop);
+        } else {
+          SubMenuControl.hideSubMenu();
+        }
         return;
       }
     }
@@ -238,8 +248,7 @@ let ToolbarControl = {
 }
 
 ToolbarControl.addTool(SelectAndPanTool);
-ToolbarControl.addTool(StraightLineTool);
-ToolbarControl.addTool(DotAlignDrawTool);
+ToolbarControl.addTool(PathTool);
 ToolbarControl.addTool(FreePaintTool);
 
 ToolbarControl.selectTool(availableTools[0].name);

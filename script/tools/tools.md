@@ -6,6 +6,7 @@ A Tool module follows the following format:
       preview: null,  
       exportSketchCallback: null,  
       drawPreview: function(context),  
+      subMenu: null,  
       events: {  
         'eventname': function(evt),  
         ...  
@@ -21,6 +22,8 @@ The currently in-progress drawable item. It will remain null in the declaration 
 The callback function called when a finalized sketch is exported. This will remain null in the declaration and be populated by the Toolbar module. It is called by events.
 ## drawPreview
 A function to draw the in-progress drawable item contained in 'preview'. If null, the Toolbar module will attempt to draw the preview sketch with no other parameters.
+## subMenu
+An optional submenu to be enabled whenever the tool is in use
 ## events
 A dictionary of event handlers. Tool event handlers follow two formats: raw event handlers (usually for mouse or touchpad events) or override events (for undo, redo, escape, etc).
 
