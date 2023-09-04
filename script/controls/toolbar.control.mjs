@@ -8,6 +8,7 @@ import { ObjectService } from '../services/object.service.mjs';
 import { CommonService } from '../services/common.service.mjs';
 import { TouchControl } from './touch.control.mjs';
 import { SubMenuControl } from './submenu.control.mjs';
+import { ArcTool } from '../tools/arc-tool.mjs';
 
 let availableTools = [];
 let activeTool = null;
@@ -250,6 +251,7 @@ let ToolbarControl = {
 ToolbarControl.addTool(SelectAndPanTool);
 ToolbarControl.addTool(PathTool);
 ToolbarControl.addTool(FreePaintTool);
+//ToolbarControl.addTool(ArcTool);
 
 ToolbarControl.selectTool(availableTools[0].name);
 

@@ -1,6 +1,9 @@
 import { CommonService } from '../services/common.service.mjs';
 import { dot } from './shapes.mjs';
 
+const PI = Math.PI;
+const TAU = 2 * PI;
+
 class Sketch {
   constructor(type) {
     this.type = type;
@@ -10,6 +13,7 @@ class Sketch {
     this.boundingRect = null;
     this.color = '';
     this.fill = '';
+    this.size = 2;
   }
 }
 
@@ -17,23 +21,24 @@ class PathSketch extends Sketch {
   constructor() {
     super('path');
     this.nodes = [];
-    this.size = 2;
     this.isClosed = false;
   }
 }
 
-function drawSketch(context, sketch) {
-  switch (sketch.type) {
-    case 'path':
-      drawPathSketch(context, sketch);
-      break;
-    case 'default':
-      console.error('Unknown sketch type "' + sketch.type + "'");
-      return;
+class ArcSketch extends Sketch {
+  constructor(x, y, width, height, rotation, start = 0, end = TAU) {
+    super('arc');
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.rotation = rotation;
+    this.start = start;
+    this.end = end;
   }
 }
 
-function drawPathSketch(context, sketch) {
+function drawSketch(context, sketch) {
   context.lineWidth = sketch.size;
   context.strokeStyle = sketch.color;
   context.fillStyle = sketch.fill;
@@ -44,6 +49,20 @@ function drawPathSketch(context, sketch) {
     context.translate(-sketch.offsetX, -sketch.offsetY);
     return;
   }
+  switch (sketch.type) {
+    case 'path':
+      drawPathSketch(context, sketch);
+      break;
+    case 'arc':
+      drawArcSketch(context, sketch);
+      break;
+    case 'default':
+      console.error('Unknown sketch type "' + sketch.type + "'");
+      return;
+  }
+}
+
+function drawPathSketch(context, sketch) {
   if (sketch.nodes.length == 0) {
     return;
   }
@@ -63,11 +82,20 @@ function drawPathSketch(context, sketch) {
   context.stroke();
 }
 
+function drawArcSketch(context, sketch) {
+  context.beginPath();
+  context.ellipse(sketch.x, sketch.y, sketch.width, sketch.height, sketch.rotation, sketch.start, sketch.end);
+  context.fill();
+  context.stroke();
+}
 
 function setInternalPath(sketch) {
   switch (sketch.type) {
     case 'path':
       setInternalPathOfPathSketch(sketch);
+      break;
+    case 'arc':
+      setInternalPathOfArcSketch(sketch);
       break;
     case 'default':
       console.error('Unknown sketch type "' + sketch.type + "'");
@@ -120,6 +148,18 @@ function setInternalPathOfPathSketch(sketch) {
   }
 }
 
+function setInternalPathOfArcSketch(sketch) {
+  // TODO : Rotate this
+  sketch.boundingRect = {
+    x: sketch.x,
+    y: sketch.y,
+    w: sketch.width,
+    h: sketch.height
+  };
+  sketch.path = new Path2D();
+  sketch.path.ellipse(sketch.x, sketch.y, sketch.width, sketch.height, sketch.rotation, sketch.start, sketch.end);
+}
+
 export {
-  Sketch, PathSketch, drawSketch, setInternalPath
+  Sketch, PathSketch, ArcSketch, drawSketch, setInternalPath
 }
