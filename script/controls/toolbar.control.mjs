@@ -9,6 +9,7 @@ import { CommonService } from '../services/common.service.mjs';
 import { TouchControl } from './touch.control.mjs';
 import { SubMenuControl } from './submenu.control.mjs';
 import { ArcTool } from '../tools/arc-tool.mjs';
+import { BezierTool } from '../tools/bezier-tool.mjs';
 
 let availableTools = [];
 let activeTool = null;
@@ -252,6 +253,7 @@ ToolbarControl.addTool(SelectAndPanTool);
 ToolbarControl.addTool(PathTool);
 ToolbarControl.addTool(FreePaintTool);
 //ToolbarControl.addTool(ArcTool);
+ToolbarControl.addTool(BezierTool);
 
 ToolbarControl.selectTool(availableTools[0].name);
 

@@ -38,6 +38,13 @@ class ArcSketch extends Sketch {
   }
 }
 
+class BezierSketch extends Sketch {
+  constructor() {
+    super('bezier');
+    this.nodes = [];
+  }
+}
+
 function drawSketch(context, sketch) {
   context.lineWidth = sketch.size;
   context.strokeStyle = sketch.color;
@@ -55,6 +62,9 @@ function drawSketch(context, sketch) {
       break;
     case 'arc':
       drawArcSketch(context, sketch);
+      break;
+    case 'bezier':
+      drawBezierSketch(context, sketch);
       break;
     case 'default':
       console.error('Unknown sketch type "' + sketch.type + "'");
@@ -89,6 +99,39 @@ function drawArcSketch(context, sketch) {
   context.stroke();
 }
 
+function drawBezierSketch(context, sketch) {
+  if (sketch.nodes.length === 0 || sketch.nodes.length > 4) {
+    return;
+  }
+  context.beginPath();
+  context.moveTo(sketch.nodes[0].x, sketch.nodes[0].y);
+  switch (sketch.nodes.length) {
+    case 1:
+      dot(sketch.nodes[0].x, sketch.nodes[0].y, sketch.size, context, sketch.color);
+      return;
+    case 2:
+      // linear
+      context.lineTo(sketch.nodes[1].x, sketch.nodes[1].y);
+      break;
+    case 3:
+      // quadratic
+      context.quadraticCurveTo(sketch.nodes[1].x, sketch.nodes[1].y, sketch.nodes[2].x, sketch.nodes[2].y);
+      break;
+    case 4:
+      // cubic
+      context.bezierCurveTo(
+        sketch.nodes[1].x, sketch.nodes[1].y,
+        sketch.nodes[2].x, sketch.nodes[2].y,
+        sketch.nodes[3].x, sketch.nodes[3].y);
+      break;
+    default:
+      // shouldn't ever get here buuuuuut
+      return;
+  }
+  context.fill();
+  context.stroke();
+}
+
 function setInternalPath(sketch) {
   switch (sketch.type) {
     case 'path':
@@ -96,6 +139,9 @@ function setInternalPath(sketch) {
       break;
     case 'arc':
       setInternalPathOfArcSketch(sketch);
+      break;
+    case 'bezier':
+      setInternalPathOfBezierSketch(sketch);
       break;
     case 'default':
       console.error('Unknown sketch type "' + sketch.type + "'");
@@ -135,10 +181,12 @@ function setInternalPathOfPathSketch(sketch) {
     sketch.path.closePath();
   }
   if (minX == maxX) {
-    minX--;
+    minX -= sketch.size / 2;
+    maxX += sketch.size / 2;
   }
   if (minY == maxY) {
-    minY--;
+    minY -= sketch.size / 2;
+    maxY += sketch.size / 2;
   }
   sketch.boundingRect = {
     x: minX,
@@ -160,6 +208,69 @@ function setInternalPathOfArcSketch(sketch) {
   sketch.path.ellipse(sketch.x, sketch.y, sketch.width, sketch.height, sketch.rotation, sketch.start, sketch.end);
 }
 
+function setInternalPathOfBezierSketch(sketch) {
+  if (sketch.nodes.length === 0 || sketch.nodes.length > 4) {
+    return;
+  }
+  sketch.path = new Path2D();
+  sketch.path.moveTo(sketch.nodes[0].x, sketch.nodes[0].y);
+  switch (sketch.nodes.length) {
+    case 1:
+      dot(sketch.nodes[0].x, sketch.nodes[0].y, sketch.size, sketch.path, sketch.color);
+      return;
+    case 2:
+      // linear
+      sketch.path.lineTo(sketch.nodes[1].x, sketch.nodes[1].y);
+      break;
+    case 3:
+      // quadratic
+      sketch.path.quadraticCurveTo(sketch.nodes[1].x, sketch.nodes[1].y, sketch.nodes[2].x, sketch.nodes[2].y);
+      break;
+    case 4:
+      // cubic
+      sketch.path.bezierCurveTo(
+        sketch.nodes[1].x, sketch.nodes[1].y,
+        sketch.nodes[2].x, sketch.nodes[2].y,
+        sketch.nodes[3].x, sketch.nodes[3].y);
+      break;
+    default:
+      // shouldn't ever get here buuuuuut
+      return;
+  }
+  let minX = sketch.nodes[0].x;
+  let maxX = minX;
+  let minY = sketch.nodes[0].y;
+  let maxY = minY;
+  for (let i = 1; i < sketch.nodes.length; i++) {
+    if (sketch.nodes[i].x < minX) {
+      minX = sketch.nodes[i].x;
+    }
+    if (sketch.nodes[i].x > maxX) {
+      maxX = sketch.nodes[i].x;
+    }
+    if (sketch.nodes[i].y < minY) {
+      minY = sketch.nodes[i].y;
+    }
+    if (sketch.nodes[i].y > maxY) {
+      maxY = sketch.nodes[i].y;
+    }
+  }
+  if (minX == maxX) {
+    minX -= sketch.size / 2;
+    maxX += sketch.size / 2;
+  }
+  if (minY == maxY) {
+    minY -= sketch.size / 2;
+    maxY += sketch.size / 2;
+  }
+  sketch.boundingRect = {
+    x: minX,
+    y: minY,
+    w: maxX - minX + 1,
+    h: maxY - minY + 1
+  }
+}
+
 export {
-  Sketch, PathSketch, ArcSketch, drawSketch, setInternalPath
+  Sketch, PathSketch, ArcSketch, BezierSketch, drawSketch, setInternalPath
 }

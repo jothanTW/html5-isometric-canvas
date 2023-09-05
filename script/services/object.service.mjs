@@ -165,7 +165,8 @@ let ObjectService = {
     context.setTransform(1, 0, 0, 1, 0, 0);
     for (let i = this.objects.length - 1; i >= 0; i--) {
       if (this.objects[i].path &&
-        context.isPointInPath(this.objects[i].path, x - this.objects[i].offsetX, y - this.objects[i].offsetY)) {
+        (context.isPointInStroke(this.objects[i].path, x - this.objects[i].offsetX, y - this.objects[i].offsetY) ||
+        context.isPointInPath(this.objects[i].path, x - this.objects[i].offsetX, y - this.objects[i].offsetY))) {
         return i;
       }
     }
