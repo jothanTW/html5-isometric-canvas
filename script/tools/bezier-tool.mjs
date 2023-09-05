@@ -7,7 +7,7 @@ import { CommonService } from "../services/common.service.mjs";
 import { BezierSketch, drawSketch, setInternalPath } from "../core/sketch.mjs";
 
 let BezierTool = {
-  icon: './img/snap-icon.png',
+  icon: './img/bezier-path.png',
   name: 'Bezier Path Tool',
   preview: null,
   exportSketchCallback: null,
