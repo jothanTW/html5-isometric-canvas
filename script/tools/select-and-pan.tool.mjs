@@ -37,6 +37,7 @@ let SelectAndPanTool = {
     escape: function () {
       SelectAndPanTool.isMouseDown = false;
       SelectAndPanTool.isRightMouseDown = false;
+      SelectAndPanTool.movingIndex = -1;
       CursorControl.changeCursor();
     },
     delete: function () {
@@ -61,6 +62,10 @@ let SelectAndPanTool = {
         if (SelectAndPanTool.movingIndex !== -1) {
           CursorControl.changeCursor('grabbing');
           ObjectService.startMove(SelectAndPanTool.movingIndex);
+          let obj = ObjectService.objects[SelectAndPanTool.movingIndex];
+          StylebarControl.setFillColor(obj.fill);
+          StylebarControl.setLineColor(obj.color);
+          StylebarControl.setLineSize(obj.size);
         }
       }
       return true;
@@ -114,6 +119,10 @@ let SelectAndPanTool = {
       if (SelectAndPanTool.movingIndex !== -1) {
         CursorControl.changeCursor('grabbing');
         ObjectService.startMove(SelectAndPanTool.movingIndex);
+        let obj = ObjectService.objects[SelectAndPanTool.movingIndex];
+        StylebarControl.setFillColor(obj.fill);
+        StylebarControl.setLineColor(obj.color);
+        StylebarControl.setLineSize(obj.size);
       }
     }
   }

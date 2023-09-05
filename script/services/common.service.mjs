@@ -1,3 +1,5 @@
+import { EventLoudener } from "../core/loudener.mjs";
+
 let drawFunction = null;
 
 /**
@@ -5,6 +7,11 @@ let drawFunction = null;
  * @module services/common
  */
 let CommonService = {
+  /** 
+   * Event emitters 
+   */
+  zoomEvent: new EventLoudener(),
+
   /**
    * Constants and constraints for the view
    */
@@ -16,6 +23,8 @@ let CommonService = {
     zoomPercent: 0.001,
     pinchPercent: 0.01,
     trackpadScale: 2,
+
+    zoomStep: 0.1,
 
     // grid constraints
     gridSize: 50,
@@ -29,14 +38,28 @@ let CommonService = {
   canvasOffsetX: 0,
   canvasOffsetY: 0,
 
-  setZoom: function (val) {
+  setZoom: function(val) {
+    let oldZoom = this.zoom;
     this.zoom = val;
+    this.zoom = 
+    Math.ceil(((this.zoom - this.constants.minZoom ) / this.constants.zoomStep)) 
+      * this.constants.zoomStep 
+      + this.constants.minZoom;
+    // make sure at least one step takes place
+    if (oldZoom === this.zoom && val !== oldZoom) {
+      if (val < oldZoom) {
+        this.zoom -= this.constants.zoomStep;
+      } else {
+        this.zoom += this.constants.zoomStep;
+      }
+    }
     if (this.zoom < this.constants.minZoom) {
       this.zoom = this.constants.minZoom;
     }
     if (this.zoom > this.constants.maxZoom) {
       this.zoom = this.constants.maxZoom;
     }
+    this.zoomEvent.emit(this.zoom);
   },
 
   modZoom: function (val, zoomCoords = null) {

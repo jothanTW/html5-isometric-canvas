@@ -19,8 +19,13 @@
     <div class="color-picker" id="fill-color-picker">
       <input value="#00000080" data-jscolor="{width:100, closeText: 'OK'}">
     </div>
-    <div class="line-slider" id="line-weight-slider">
-      <input type="range" min="1" max="10" value="3" step="1">
+    <div class="slider line-slider" id="line-weight-slider">
+      <input type="range" value="3" step="1">
+      <span id="line-weight-value" />
+    </div>
+    <div class="slider zoom-slider" id="zoom-slider">
+      <input type="range">
+      <span id="zoom-value" />
     </div>
   </div>
 

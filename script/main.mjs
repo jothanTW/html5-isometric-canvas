@@ -58,7 +58,6 @@ function draw() {
 function resize() {
   let winWidth = container.offsetWidth;
   let winHeight = container.offsetHeight;
-  console.log(canvas.offsetLeft);
   CommonService.canvasOffsetX = canvas.offsetLeft;
   CommonService.canvasOffsetY = canvas.offsetTop;
   canvas.style.width = winWidth + 'px';
@@ -81,7 +80,6 @@ draw();
 canvas.addEventListener('wheel', ev => {
   ev.stopPropagation();
   ev.preventDefault();
-  console.log(ev);
   let isTouchpad = false;
   let deltaY = ev.deltaY;
   if (ev.wheelDeltaY === ev.deltaY * -3 || ev.deltaMode === 0) {
@@ -108,7 +106,6 @@ canvas.addEventListener('resize', ev => {
 
 
 TouchControl.zoom.addListener(evt => {
-  console.log(evt);
   CommonService.modZoom(evt.zoom * CommonService.constants.pinchPercent, 
     {x: evt.clientX / CommonService.zoom, y: evt.clientY / CommonService.zoom});
   resize();
@@ -116,8 +113,6 @@ TouchControl.zoom.addListener(evt => {
 });
 
 TouchControl.pan.addListener(evt => {
-  //console.log(evt)
-  
   CommonService.modX(-evt.deltaX);
   CommonService.modY(-evt.deltaY);
   draw();

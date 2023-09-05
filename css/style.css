@@ -52,12 +52,17 @@ html, body {
     max-width: calc(100% - 40px);
 }
 
-.line-slider {
+.slider {
+    width: 100%;
+    display: flex;
+}
+
+.slider > input {
     width: 100%;
 }
 
-.line-slider > input {
-    width: 100%;
+.slider > span {
+    width: 30px;
 }
 
 

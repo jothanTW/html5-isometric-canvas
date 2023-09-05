@@ -118,7 +118,6 @@ let ToolbarControl = {
           SubMenuControl.loadSubMenu(t.subMenu);
           // locate the position of the tool
           let toolEle = document.getElementById('tool-' + t.name);
-          console.log(toolEle);
           SubMenuControl.placeSubMenu(toolEle.offsetLeft + toolEle.offsetWidth + 10, toolEle.offsetTop);
         } else {
           SubMenuControl.hideSubMenu();
