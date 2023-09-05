@@ -74,8 +74,8 @@ let CommonService = {
 
   setX: function (val) {
     this.viewX = val;
-    if (this.viewX < -this.constants.maxDim) {
-      this.viewX = -this.constants.maxDim;
+    if (this.viewX < 0) {
+      this.viewX = 0;
     }
     if (this.viewX > this.constants.maxDim) {
       this.viewX = this.constants.maxDim;
@@ -88,8 +88,8 @@ let CommonService = {
 
   setY: function (val) {
     this.viewY = val;
-    if (this.viewY < -this.constants.maxDim) {
-      this.viewY = -this.constants.maxDim;
+    if (this.viewY < 0) {
+      this.viewY = 0;
     }
     if (this.viewY > this.constants.maxDim) {
       this.viewY = this.constants.maxDim;
@@ -108,8 +108,8 @@ let CommonService = {
    */
   convertToGridCoords: function (x, y) {
     return {
-      x: x / this.zoom + this.viewX - this.canvasOffsetX,
-      y: y / this.zoom + this.viewY - this.canvasOffsetY
+      x: (x - this.canvasOffsetX) / this.zoom + this.viewX,
+      y: (y - this.canvasOffsetY) / this.zoom + this.viewY
     }
   },
 
@@ -169,6 +169,8 @@ let CommonService = {
 }
 
 CommonService.constants.gridX = Math.sin(Math.PI / 3) * CommonService.constants.gridSize;
+CommonService.viewX = CommonService.constants.maxDim / 2;
+CommonService.viewY = CommonService.constants.maxDim / 2;
 
 export {
   CommonService

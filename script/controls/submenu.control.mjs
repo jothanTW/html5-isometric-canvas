@@ -116,6 +116,7 @@ class SubMenu {
 let SubMenuControl = {
   activeSubMenu: null,
   loadSubMenu: function (subMenu) {
+    this.clearIcons();
     subMenu.loadIcons();
     subMenuEle.classList.add('active');
   },

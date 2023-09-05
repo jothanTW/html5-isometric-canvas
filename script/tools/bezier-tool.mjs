@@ -48,6 +48,7 @@ let BezierTool = {
         BezierTool.preview = new BezierSketch();
         BezierTool.preview.color = StylebarControl.getLineColor();
         BezierTool.preview.size = StylebarControl.getLineSize();
+        BezierTool.preview.fill = StylebarControl.getFillColor();
 
         endIcon.enable();
       }
@@ -76,6 +77,7 @@ let BezierTool = {
         BezierTool.preview = new BezierSketch();
         BezierTool.preview.color = StylebarControl.getLineColor();
         BezierTool.preview.size = StylebarControl.getLineSize();
+        BezierTool.preview.fill = StylebarControl.getFillColor();
 
         endIcon.enable();
       }
