@@ -3,6 +3,7 @@ import { ObjectService } from '../services/object.service.mjs';
 
 import { CursorControl } from '../controls/cursor.control.mjs';
 import { StylebarControl } from '../controls/stylebar.control.mjs';
+import { SubMenu, SubMenuIcon } from '../controls/submenu.control.mjs';
 
 let dashpattern = [10, 10];
 let dashcolor = '#888';
@@ -16,6 +17,7 @@ let SelectAndPanTool = {
   isMouseDown: false,
   isRightMouseDown: false,
   movingIndex: -1,
+  subMenu: new SubMenu(),
   drawPreview: function (context) {
     if (this.movingIndex !== -1) {
       let obj = ObjectService.objects[this.movingIndex];
@@ -38,6 +40,7 @@ let SelectAndPanTool = {
       SelectAndPanTool.isMouseDown = false;
       SelectAndPanTool.isRightMouseDown = false;
       SelectAndPanTool.movingIndex = -1;
+      setLayerIconStatus();
       CursorControl.changeCursor();
     },
     delete: function () {
@@ -46,6 +49,7 @@ let SelectAndPanTool = {
       }
       ObjectService.removeObject(SelectAndPanTool.movingIndex);
       SelectAndPanTool.movingIndex = -1;
+      setLayerIconStatus();
       return true;
     },
     mousedown: function (evt) {
@@ -57,7 +61,6 @@ let SelectAndPanTool = {
         let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
         // get the target from the canvas clicked on in case more are added in the future
         let context = evt.target.getContext('2d');
-        //console.log(evt);
         SelectAndPanTool.movingIndex = ObjectService.selectObjectIndex(coords.x, coords.y, context);
         if (SelectAndPanTool.movingIndex !== -1) {
           CursorControl.changeCursor('grabbing');
@@ -67,6 +70,7 @@ let SelectAndPanTool = {
           StylebarControl.setLineColor(obj.color);
           StylebarControl.setLineSize(obj.size);
         }
+        setLayerIconStatus();
       }
       return true;
     },
@@ -114,7 +118,6 @@ let SelectAndPanTool = {
       let coords = CommonService.convertToGridCoords(evt.clientX, evt.clientY);
       // get the target from the canvas clicked on in case more are added in the future
       let context = evt.target.getContext('2d');
-      //console.log(evt);
       SelectAndPanTool.movingIndex = ObjectService.selectObjectIndex(coords.x, coords.y, context);
       if (SelectAndPanTool.movingIndex !== -1) {
         CursorControl.changeCursor('grabbing');
@@ -124,6 +127,7 @@ let SelectAndPanTool = {
         StylebarControl.setLineColor(obj.color);
         StylebarControl.setLineSize(obj.size);
       }
+      setLayerIconStatus();
     }
   }
 }
@@ -148,5 +152,50 @@ StylebarControl.lineWeightChanged.addListener(weight => {
     CommonService.triggerDrawFunction();
   }
 });
+
+let moveToBottomIcon = new SubMenuIcon('./img/layer-down-icon.png', 'Move to Bottom');
+let moveToTopIcon = new SubMenuIcon('./img/layer-up-icon.png', 'Move to Top');
+
+moveToBottomIcon.disable();
+moveToTopIcon.disable();
+
+moveToBottomIcon.event.addListener(() => {
+  if (SelectAndPanTool.movingIndex !== -1) {
+    ObjectService.changeObjectLayer(SelectAndPanTool.movingIndex, true);
+    SelectAndPanTool.movingIndex = 0;
+    setLayerIconStatus();
+    CommonService.triggerDrawFunction();
+  }
+});
+
+moveToTopIcon.event.addListener(() => {
+  if (SelectAndPanTool.movingIndex !== -1) {
+    ObjectService.changeObjectLayer(SelectAndPanTool.movingIndex, false);
+    SelectAndPanTool.movingIndex = ObjectService.objects.length - 1;
+    setLayerIconStatus();
+    CommonService.triggerDrawFunction();
+  }
+});
+
+SelectAndPanTool.subMenu.icons.push(moveToBottomIcon, moveToTopIcon);
+
+function setLayerIconStatus() {
+  let index = SelectAndPanTool.movingIndex;
+  if (index == -1) {
+    moveToBottomIcon.disable();
+    moveToTopIcon.disable();
+    return;
+  }
+  if (index == 0) {
+    moveToBottomIcon.disable();
+  } else {
+    moveToBottomIcon.enable();
+  }
+  if (index == ObjectService.objects.length - 1) {
+    moveToTopIcon.disable();
+  } else {
+    moveToTopIcon.enable();
+  }
+}
 
 export { SelectAndPanTool }

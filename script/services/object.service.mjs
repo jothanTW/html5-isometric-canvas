@@ -144,6 +144,26 @@ let ObjectService = {
     this.objects[index].size = weight;
     EventService.addEvent(new WeightEvent(index, oldWeight, weight));
   },
+  changeObjectLayer: function(index, isToBack) {
+    if (index < 0 || index >= this.objects.length) {
+      console.error('Attempted to relayer a nonexistent object at index "' + index + '"');
+      return;
+    }
+    let nIndex = this.objects.length - 1;
+    if (isToBack) {
+      nIndex = 0;
+    }
+    if (nIndex == index) {
+      return;
+    }
+    let [obj] = this.objects.splice(index, 1);
+    if (isToBack) {
+      this.objects.unshift(obj);
+    } else {
+      this.objects.push(obj);
+    }
+    EventService.addEvent(new LayerEvent(index, nIndex));
+  },
   /**
    * Draws all objects in the stack in order
    * @param {CanvasRenderingContext2D} context - The canvas drawing context
@@ -272,7 +292,7 @@ function unprocessEvent(event) {
       ObjectService.objects[event.index].offsetY -= event.deltaY;
       break;
     case 'layer':
-      let [obj] = ObjectService.objects.splice(event.newIndex);
+      let [obj] = ObjectService.objects.splice(event.newIndex, 1);
       ObjectService.objects.splice(event.index, 0, obj);
       break;
     case 'color':
@@ -301,7 +321,7 @@ function reprocessEvent(event) {
       ObjectService.objects[event.index].offsetY += event.deltaY;
       break;
     case 'layer':
-      let [obj] = ObjectService.objects.splice(event.index);
+      let [obj] = ObjectService.objects.splice(event.index, 1);
       ObjectService.objects.splice(event.newIndex, 0, obj);
       break;
     case 'color':

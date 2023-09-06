@@ -23,7 +23,9 @@ The callback function called when a finalized sketch is exported. This will rema
 ## drawPreview
 A function to draw the in-progress drawable item contained in 'preview'. If null, the Toolbar module will attempt to draw the preview sketch with no other parameters.
 ## subMenu
-An optional submenu to be enabled whenever the tool is in use
+An optional submenu to be enabled whenever the tool is in use. When present, it will always be set as 'new SubMenu()'
+
+Submenu items and their listeners get set up within the module but outside of the tool declaration
 ## events
 A dictionary of event handlers. Tool event handlers follow two formats: raw event handlers (usually for mouse or touchpad events) or override events (for undo, redo, escape, etc).
 

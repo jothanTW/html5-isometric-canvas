@@ -1,4 +1,3 @@
-import { CommonService } from '../services/common.service.mjs';
 import { dot } from './shapes.mjs';
 
 const PI = Math.PI;
