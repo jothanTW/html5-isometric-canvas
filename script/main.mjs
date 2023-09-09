@@ -19,6 +19,11 @@ let lineColor = '#888';
 // controls
 let gridstat = 1; // 0 - none, 1 - dots, 2 - lines
 
+// mobile setup
+if (!context.reset) {
+  context.reset = context.resetTransform;
+}
+
 function draw() {
   context.reset()
   context.scale(CommonService.zoom, CommonService.zoom);
