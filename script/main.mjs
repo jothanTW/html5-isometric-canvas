@@ -128,6 +128,7 @@ TouchControl.pan.addListener(evt => {
 
 
 //DEBUG
+/*
 DialogControl.addText('AAAAaaAAaaAAa');
 DialogControl.addInput('aaA');
 DialogControl.addButton('OK', () => {
@@ -137,3 +138,4 @@ DialogControl.addButton('OK', () => {
 DialogControl.addButton('Cancel');
 DialogControl.addText('whoa');
 DialogControl.showDialog();
+*/
