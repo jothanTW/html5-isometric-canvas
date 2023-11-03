@@ -3,6 +3,7 @@ import { dot } from './core/shapes.mjs';
 import { ToolbarControl } from './controls/toolbar.control.mjs';
 import { KeyboardControl } from './controls/keyboard.control.mjs';
 import { TouchControl } from './controls/touch.control.mjs';
+import { DialogControl } from './controls/dialog.comtrol.mjs';
 
 import { CommonService } from './services/common.service.mjs';
 import { ObjectService } from './services/object.service.mjs';
@@ -122,3 +123,17 @@ TouchControl.pan.addListener(evt => {
   CommonService.modY(-evt.deltaY);
   draw();
 })
+
+
+
+
+//DEBUG
+DialogControl.addText('AAAAaaAAaaAAa');
+DialogControl.addInput('aaA');
+DialogControl.addButton('OK', () => {
+  console.log(DialogControl.getInputValues()['aaA']);
+  DialogControl.hideDialog();
+});
+DialogControl.addButton('Cancel');
+DialogControl.addText('whoa');
+DialogControl.showDialog();

@@ -1,4 +1,4 @@
-import { PathTool } from '../tools/path-tool.mjs';
+import { PathTool } from '../tools/path.tool.mjs';
 import { SelectAndPanTool } from '../tools/select-and-pan.tool.mjs';
 import { FreePaintTool } from '../tools/free-paint.tool.mjs';
 
@@ -8,8 +8,9 @@ import { ObjectService } from '../services/object.service.mjs';
 import { CommonService } from '../services/common.service.mjs';
 import { TouchControl } from './touch.control.mjs';
 import { SubMenuControl } from './submenu.control.mjs';
-import { ArcTool } from '../tools/arc-tool.mjs';
-import { BezierTool } from '../tools/bezier-tool.mjs';
+import { ArcTool } from '../tools/arc.tool.mjs';
+import { BezierTool } from '../tools/bezier.tool.mjs';
+import { SaveLoadTool } from '../tools/save-load.tool.mjs';
 
 let availableTools = [];
 let activeTool = null;
@@ -253,6 +254,7 @@ ToolbarControl.addTool(PathTool);
 ToolbarControl.addTool(FreePaintTool);
 //ToolbarControl.addTool(ArcTool);
 ToolbarControl.addTool(BezierTool);
+ToolbarControl.addTool(SaveLoadTool);
 
 ToolbarControl.selectTool(availableTools[0].name);
 

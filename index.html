@@ -5,6 +5,10 @@
   <script type="module" src="./script/main.mjs"></script>
   <script src="./script/imports/jscolor.min.js"></script>
   <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/dialog.css" />
+  <link rel="stylesheet" href="./css/stylebar.css" />
+  <link rel="stylesheet" href="./css/submenu.css" />
+  <link rel="stylesheet" href="./css/toolbar.css" />
 </head>
 
 <body>
@@ -29,10 +33,21 @@
     </div>
   </div>
 
-  <div id="submenu"></div>
+  <div id="submenu">
+    <!-- This is dynamically populated by the SubMenu module -->
+  </div>
+
+  <div id="dialog">
+    <div id="dialogClose">X</div>
+    <!-- This is dynamically populated by the Dialog module -->
+  </div>
 
   <div id="container">
     <canvas id="canvas"></canvas>
+  </div>
+  <div class="secretControls">
+    <input type="file" id="uploadProxy">
+    <a class="download-proxy" id="downloadProxy" download="iso-canvas.dat"></a>
   </div>
 </body>
 

@@ -270,6 +270,46 @@ function setInternalPathOfBezierSketch(sketch) {
   }
 }
 
+function verifyIsSketch(sketch) {
+  if (sketch instanceof Sketch) {
+    return null;
+  }
+  if (!sketch || typeof sketch !== 'object') {
+    return 'sketch is not an object!'
+  }
+
+  let p;
+  let err;
+  switch (sketch.type) {
+    case 'path':
+      p = new PathSketch();
+      break;
+    case 'arc':
+      p = new ArcSketch();
+      break;
+    case 'bezier':
+      p = new BezierSketch();
+      break;
+    case 'default':
+      return 'Missing or invalid sketch type'
+  }
+  // prop search
+  for (let prop of Object.getOwnPropertyNames(p)) {
+    if (err = lookForProp(sketch, prop)) {
+      return err;
+    }
+  }
+
+  return null;
+}
+
+function lookForProp(sketch, prop) {
+  if (sketch[prop] !== undefined) {
+    return null;
+  }
+  return 'sketch object is missing required property "' + prop + '"';
+}
+
 export {
-  Sketch, PathSketch, ArcSketch, BezierSketch, drawSketch, setInternalPath
+  Sketch, PathSketch, ArcSketch, BezierSketch, drawSketch, setInternalPath, verifyIsSketch
 }

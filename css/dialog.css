@@ -1,0 +1,42 @@
+#dialog {
+    display: none;
+}
+
+#dialogClose {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid black;
+    cursor: pointer;
+    width: 15px;
+    height: 17px;
+}
+
+#dialog.active{
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100px;
+    min-height: 50px;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    padding: 10px;
+    border: 3px solid blue;
+    border-radius: 10px;
+    background-color: white;
+    padding-top: 20px;
+}
+
+#dialog > div {
+    margin: 5px;
+}
+
+.dialog-button-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.dialog-input > input {
+    margin-left: 5px;
+}

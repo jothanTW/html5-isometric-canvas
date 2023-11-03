@@ -1,0 +1,31 @@
+#stylebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: gainsboro;
+    min-height: 100px;
+    width: 200px;
+    z-index: 10;
+    padding: 10px;
+}
+
+.color-picker {
+    max-width: 100%;
+}
+
+.color-picker > input {
+    max-width: calc(100% - 40px);
+}
+
+.slider {
+    width: 100%;
+    display: flex;
+}
+
+.slider > input {
+    width: 100%;
+}
+
+.slider > span {
+    width: 30px;
+}

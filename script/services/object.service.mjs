@@ -1,4 +1,4 @@
-import { drawSketch } from '../core/sketch.mjs';
+import { drawSketch, setInternalPath, verifyIsSketch } from '../core/sketch.mjs';
 import { CommonService } from './common.service.mjs';
 
 /**
@@ -118,7 +118,6 @@ let ObjectService = {
    * @param {number} index - The stack index of the sketch
    * @param {string} color 
    * @param {boolean} isFill 
-   * @returns 
    */
   colorObject: function (index, color, isFill = false) {
     if (index < 0 || index >= this.objects.length) {
@@ -135,6 +134,11 @@ let ObjectService = {
     }
     EventService.addEvent(new ColorEvent(index, isFill, oldColor, color));
   },
+  /**
+   * Change an object's line weight
+   * @param {string} index 
+   * @param {string} weight
+   */
   changeObjectWeight: function (index, weight) {
     if (index < 0 || index >= this.objects.length) {
       console.error('Attempted to color a nonexistent object at index "' + index + '"');
@@ -144,6 +148,11 @@ let ObjectService = {
     this.objects[index].size = weight;
     EventService.addEvent(new WeightEvent(index, oldWeight, weight));
   },
+  /**
+   * Put an object on the top or bottom of the object stack
+   * @param {string} index 
+   * @param {boolean} isToBack - Whether or not the object is being set as the front of back object
+   */
   changeObjectLayer: function(index, isToBack) {
     if (index < 0 || index >= this.objects.length) {
       console.error('Attempted to relayer a nonexistent object at index "' + index + '"');
@@ -191,6 +200,34 @@ let ObjectService = {
       }
     }
     return -1;
+  },
+  serializeObjectList: function() {
+    return JSON.stringify(this.objects);
+  },
+  loadObjectList: function(objs) {
+    let err;
+    try {
+      let objArr = JSON.parse(objs);
+      if (!Array.isArray(objArr)) {
+        throw 'Loaded object list is not an array!'
+      }
+      for (let obj of objArr) {
+        if (err = verifyIsSketch(obj)) {
+          throw err;
+        }
+      }
+      for (let obj of objArr) {
+        setInternalPath(obj);
+      }
+      this.objects = objArr;
+      EventService.clearStacks();
+      CommonService.triggerDrawFunction();
+    } catch (e) {
+      console.log('aaa!')
+      console.error(e);
+      return false;
+    }
+    return true;
   }
 }
 
@@ -381,6 +418,10 @@ let EventService = {
       // REPROCESS THE EVENT
       reprocessEvent(event);
     }
+  },
+  clearStacks: function() {
+    this.eventStack = [];
+    this.undoStack = [];
   }
 }
 
